@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AppleWeather</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPPOHs6kUZiKzg474Nmm2ZRKrJhnKvCao&libraries=places"></script>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <a class="navbar-brand" href="#"><h1>Apple Weather</h1></a>
+      <div class="collapse navbar-collapse" id="header">
+        <span class="mr-auto"></span>
+      </div>
+      <%- if @forecast.persisted? %>
+        <div class="mt-4 alert alert-info">
+          <%= @forecast.current %>
+          <%= "#{@forecast.city}, #{@forecast.state}" %>
+          (<%= @forecast.zip %>)
+          <%= @forecast.high %>/<%= @forecast.low %>
+        </div>
+      <% end %>
+    </nav>
+
+    <main role="main" class="container text-center">
+      <div class="weather-info mt-4">
+        <%= yield %>
+        <%= form_for(:forecast, method: :post, path: forecasts_path) do |f| %>
+          <%= f.text_field :address, id: "autocomplete_address", class: "mt-6 form-control autocomplete location-input mr-sm-2" %>
+          <button class="btn btn-outline-info my-2 my-lg-0" type="submit">Get Forecast</button>
+        <% end %>
+      </div>
+    </main>
+
+    <footer class="footer fixed-bottom alert alert-info">
+      <span class="text-muted pull-right">Powered by DarkSky <a class="btn btn-sm btn-info" href="https://www.forecast.io">Forecast.IO</a></span>
+    </footer>
+  </body>
+</html>
