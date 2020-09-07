@@ -2,18 +2,17 @@
 
 class ForecastsController < ApplicationController
   def create
-    @forecast = ForecastsService.new(forecast_params).call
-
-    redirect_to @forecast
+    @forecast = ::ForecastsService.new(forecast_params).call
+    redirect_to(forecast_path(@forecast.zip))
   end
 
   def show
-    @forecast = Forecast.find_by(id: params[:zip])
+    @forecast = Forecast.find_by(zip: params[:id])
   end
 
   private
 
   def forecast_params
-    params.permit(:address)
+    params.require("forecast").permit("address")
   end
 end

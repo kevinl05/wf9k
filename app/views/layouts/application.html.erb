@@ -2,25 +2,40 @@
 <html>
   <head>
     <title>AppleWeather</title>
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.credentials.places_api_key %>&callback=initializeAutocomplete&libraries=places"></script>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPPOHs6kUZiKzg474Nmm2ZRKrJhnKvCao&libraries=places"></script>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <a class="navbar-brand" href="#"><h1>Apple Weather</h1></a>
+      <%= link_to root_path, class: "navbar-brand" do %>
+        <h5>
+          <i class="fa fa-umbrella"></i>
+          Weather Forecaster 9000
+        </h5>
+      <% end %>
       <div class="collapse navbar-collapse" id="header">
         <span class="mr-auto"></span>
       </div>
       <%- if @forecast.persisted? %>
         <div class="mt-4 alert alert-info">
-          <%= @forecast.current %>
-          <%= "#{@forecast.city}, #{@forecast.state}" %>
-          (<%= @forecast.zip %>)
-          <%= @forecast.high %>/<%= @forecast.low %>
+          <h4><%= "#{@forecast.city}, #{@forecast.state}" %></h4>
+          <% if @forecast.zip.present? %><%= @forecast.zip %><% end %>
+          <h5>
+            <i class="fas fa-<%= font_awesome_weather_icon(@forecast.icon) %>"></i>
+            <%= number_with_precision(@forecast.current, :precision => 0) %>&#730;F
+          </h5>
+          High <%= number_with_precision(@forecast.high, :precision => 0) %>&#730; |
+          Low <%= number_with_precision(@forecast.low, :precision => 0) %>&#730;
+          <%- if @forecast.persisted? %>
+            </br >
+            <div class="float-right">
+              <em>Last updated: <%= @forecast.updated_at.strftime("%I:%M%p") %></em>
+            </div>
+          <% end %>
         </div>
       <% end %>
     </nav>
@@ -28,15 +43,18 @@
     <main role="main" class="container text-center">
       <div class="weather-info mt-4">
         <%= yield %>
-        <%= form_for(:forecast, method: :post, path: forecasts_path) do |f| %>
-          <%= f.text_field :address, id: "autocomplete_address", class: "mt-6 form-control autocomplete location-input mr-sm-2" %>
-          <button class="btn btn-outline-info my-2 my-lg-0" type="submit">Get Forecast</button>
+        <%= form_for(:forecast, method: :post, url: forecasts_path(method: :post)) do |f| %>
+          <%= f.text_field :address, id: "autocomplete_address", class: "mt-6 form-control autocomplete location-input mr-sm-2", value: "", required: true %>
+          <% if @forecast.persisted? %>
+            <%= link_to "Reset", root_path, class: "btn btn-outline-info my-2 my-lg-0" %>
+          <% end %>
+          <button class="btn btn-info my-2 my-lg-0" type="submit">Get Forecast</button>
         <% end %>
       </div>
     </main>
 
     <footer class="footer fixed-bottom alert alert-info">
-      <span class="text-muted pull-right">Powered by DarkSky <a class="btn btn-sm btn-info" href="https://www.forecast.io">Forecast.IO</a></span>
+      <span class="text-muted pull-right">Powered by DarkSky <a class="btn btn-sm btn-info" href="https://www.forecast.io" target="_blank">Forecast.IO</a></span>
     </footer>
   </body>
 </html>

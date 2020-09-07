@@ -1,0 +1,5 @@
+<h1>
+  It is currently <%= number_with_precision(@forecast.current, precision: 0) %>&#730;F and <%= @forecast.conditions %> in <%= @forecast.city %>, <%= @forecast.state %>
+  <br />
+  <i class="fas fa-<%= font_awesome_weather_icon(@forecast.icon) %>"></i>
+</h1>

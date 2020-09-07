@@ -38,6 +38,9 @@ gem 'rubocop-rails', require: false
 # GoogleAPI GeoCoding service to translate address to lat/long
 gem 'geocoder'
 
+# Required for Google Autocomplete
+gem 'jquery-rails'
+
 # Provide style elements for improved UX
 gem 'bootstrap'
 

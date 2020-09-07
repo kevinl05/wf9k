@@ -1,18 +1,30 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
-  def bootstrap_class_for flash_type
-    case flash_type
-      when :success
-        "alert-success"
-      when :error
-        "alert-error"
-      when :alert
-        "alert-block"
-      when :notice
-        "alert-info"
+  def font_awesome_weather_icon(conditions)
+    case conditions
+      when "clear-day"
+        "sun"
+      when "clear-night"
+        "moon"
+      when "rain"
+        "cloud-rain"
+      when "snow"
+        "snowflake"
+      when "sleet"
+        "snowflake"
+      when "wind"
+        "wind"
+      when "fog"
+        "smog"
+      when "cloudy"
+        "cloud"
+      when "partly-cloudy-day"
+        "cloud-sun"
+      when "partly-cloudy-night"
+        "cloud-moon"
       else
-        flash_type.to_s
+        "sun"
     end
   end
 end
