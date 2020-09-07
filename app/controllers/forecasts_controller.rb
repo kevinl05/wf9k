@@ -2,12 +2,19 @@
 
 class ForecastsController < ApplicationController
   def create
-    @forecast = ::ForecastsService.new(forecast_params).call
-    redirect_to(forecast_path(@forecast.zip))
+    service = ForecastsService.new(forecast_params)
+    @forecast = service.call
+
+    if service.valid?
+      redirect_to(forecast_path(@forecast.zip))
+    else
+      flash[:alert] = service.error
+      redirect_to root_path
+    end
   end
 
   def show
-    @forecast = Forecast.find_by(zip: params[:id])
+    @forecast = ForecastsService.new(address: params[:id]).call
   end
 
   private

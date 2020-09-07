@@ -4,13 +4,22 @@ class ForecastsService
   def initialize(params)
     @params = params
     address
-    forecast
+    forecast if valid?
   end
 
   def call
-    create_forecast unless @forecast
+    create_forecast unless @forecast || !valid?
+
     update_forecast if forecast_stale?
     @forecast
+  end
+
+  def valid?
+    @error.blank?
+  end
+
+  def error
+    @error
   end
 
   private
@@ -20,13 +29,15 @@ class ForecastsService
   end
 
   def forecast_stale?
-    @forecast && @forecast.updated_at < (Time.now - 30.minutes)
+    @forecast && @forecast.updated_at > (DateTime.now - 30.minutes)
   end
 
   def address
     @searched_address = Geocoder.search(@params[:address]).first
 
-    if @searched_address.postal_code.nil?
+    if @searched_address.nil?
+      @error = "Could not find address, please try again."
+    elsif @searched_address&.postal_code&.nil?
       @address = Geocoder.search("#{@searched_address.data["lat"]} #{@searched_address.data["lon"]}").first
     else
       @address = @searched_address
@@ -34,7 +45,7 @@ class ForecastsService
   end
 
   def create_forecast
-    forecast_details(@address.postal_code )
+    forecast_details(@address.postal_code)
 
     @forecast = Forecast.create!(
       street: "#{@address.house_number} #{@address.street}",

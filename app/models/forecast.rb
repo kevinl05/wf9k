@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Forecast < ApplicationRecord
   geocoded_by :address
   after_validation :geocode
