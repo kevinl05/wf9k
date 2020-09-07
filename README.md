@@ -1,24 +1,45 @@
-# README
+# Weather Forecaster 9000
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+[![Ruby Style Guide](https://img.shields.io/badge/code_style-rubocop-brightgreen.svg)](https://github.com/rubocop-hq/rubocop)
 
-Things you may want to cover:
+##### Prerequisites
 
-* Ruby version
+The setups steps expect following tools installed on the system.
 
-* System dependencies
+- Github
+- Ruby [2.6.3.-p62]
+- Rails [5.2.4.3]
+- Postgresql [12]
 
-* Configuration
+##### 1. Check out the repository
 
-* Database creation
+```bash
+git clone git@github.com:kevinl05/wf9k.git
+```
 
-* Database initialization
+##### 2. Create database.yml file
 
-* How to run the test suite
+Modify the database.yml file and edit the database configuration as required.
 
-* Services (job queues, cache servers, search engines, etc.)
+```bash
+vi config/database.yml
+```
 
-* Deployment instructions
+##### 3. Create and setup the database
 
-* ...
+Run the following commands to create and setup the database.
+
+```ruby
+bundle exec rake db:create
+bundle exec rake db:setup
+```
+
+##### 4. Start the Rails server
+
+You can start the rails server using the command given below.
+
+```ruby
+bundle exec rails s
+```
+
+And now you can visit the site with the URL http://localhost:3000

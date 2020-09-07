@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>AppleWeather</title>
-    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.credentials.places_api_key %>&callback=initializeAutocomplete&libraries=places"></script>
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<%= Rails.env == 'development' ? Rails.application.credentials.places_api_key : ENV['PLACES_API_KEY'] %>&callback=initializeAutocomplete&libraries=places"></script>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
