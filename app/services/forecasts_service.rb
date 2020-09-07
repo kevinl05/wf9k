@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ForecastsService
+  attr_reader :error
+
   def initialize(params)
     @params = params
     address
@@ -18,10 +20,6 @@ class ForecastsService
     @error.blank?
   end
 
-  def error
-    @error
-  end
-
   private
 
   def forecast
@@ -36,16 +34,16 @@ class ForecastsService
     @searched_address = Geocoder.search(@params[:address]).first
 
     if @searched_address.nil?
-      @error = "Could not find address, please try again."
+      @error = 'Could not find address, please try again.'
     elsif @searched_address&.postal_code&.nil?
-      @address = Geocoder.search("#{@searched_address.data["lat"]} #{@searched_address.data["lon"]}").first
+      @address = Geocoder.search("#{@searched_address.data['lat']} #{@searched_address.data['lon']}").first
     else
       @address = @searched_address
     end
   end
 
   def create_forecast
-    forecast_details(@address.postal_code)
+    forecast_details
 
     @forecast = Forecast.create!(
       street: "#{@address.house_number} #{@address.street}",
@@ -53,26 +51,26 @@ class ForecastsService
       state: @address.state,
       zip: @address.postal_code,
       current: @forecast_details.currently.temperature.round,
-      high: @forecast_details.daily.data.first["temperatureMax"].round,
-      low: @forecast_details.daily.data.first["temperatureMin"].round,
+      high: @forecast_details.daily.data.first['temperatureMax'].round,
+      low: @forecast_details.daily.data.first['temperatureMin'].round,
       conditions: @forecast_details.currently.summary,
       icon: @forecast_details.currently.icon
     )
   end
 
   def update_forecast
-    forecast_details(@address.postal_code)
+    forecast_details
 
     @forecast.update!(
       current: @forecast_details.currently.temperature.round,
-      high: @forecast_details.daily.data.first["temperatureMax"].round,
-      low: @forecast_details.daily.data.first["temperatureMin"].round,
+      high: @forecast_details.daily.data.first['temperatureMax'].round,
+      low: @forecast_details.daily.data.first['temperatureMin'].round,
       conditions: @forecast_details.currently.summary,
       icon: @forecast_details.currently.icon
     )
   end
 
-  def forecast_details(zip)
-    @forecast_details = ForecastIO.forecast(@address.data["lat"], @address.data["lon"])
+  def forecast_details
+    @forecast_details = ForecastIO.forecast(@address.data['lat'], @address.data['lon'])
   end
 end

@@ -6,10 +6,11 @@ RSpec.describe ForecastsService, type: :service do
   describe 'call' do
     context 'when forecast is stale' do
       let(:fourty_five_minutes_ago) { DateTime.now - 45.minutes }
+      let(:apple_address) { '1 Infinite Loop Cupertino, CA, US' }
       let(:forecast) { create(:forecast, updated_at: fourty_five_minutes_ago) }
 
       before do
-        described_class.new(address: '1 Infinite Loop Cupertino, CA, US').call
+        described_class.new(address: apple_address.call)
       end
 
       it 'updates the forecast' do
@@ -22,7 +23,7 @@ RSpec.describe ForecastsService, type: :service do
       let(:result) { service.call }
 
       it 'returns an error' do
-        expect(service.error).to eq("Could not find address, please try again.")
+        expect(service.error).to eq('Could not find address, please try again.')
       end
     end
 
@@ -36,7 +37,7 @@ RSpec.describe ForecastsService, type: :service do
     end
 
     context 'when forecast does not exist' do
-      it { expect{described_class.new(address: '1 Infinite Loop Cupertino, CA, US').call}.to change(Forecast, :count).from(0).to(1) }
+      it { expect { described_class.new(address: apple_address).call }.to change(Forecast, :count).from(0).to(1) }
     end
   end
 end

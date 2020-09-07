@@ -20,6 +20,6 @@ class ForecastsController < ApplicationController
   private
 
   def forecast_params
-    params.require("forecast").permit("address")
+    params.require('forecast').permit('address')
   end
 end

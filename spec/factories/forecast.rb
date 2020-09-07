@@ -5,7 +5,7 @@ FactoryBot.define do
     street { '1 Infinite Loop' }
     city { 'Cupertino' }
     state { 'CA' }
-    zip { 95014 }
+    zip { 95_014 }
     high { 90.0 }
     low { 80.0 }
     current { 75.0 }
