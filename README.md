@@ -51,3 +51,11 @@ You can run the test suite by using this command.
 ```ruby
 bundle exec rspec
 ```
+
+##### 6. Run the code linter (Rubocop)
+
+You can lint the codebase by running the following command. Conversely, you can run the same command and append a filename to check a single file.
+
+```ruby
+bundle exec rubocop --require rubocop-rails
+```
